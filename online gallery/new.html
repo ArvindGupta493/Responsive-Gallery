@@ -24,7 +24,6 @@
             width: 100%;
             position: relative;
             padding: 10px 0;
-
         }
         main{ 
             padding: 20px;
@@ -33,7 +32,6 @@
 
         .container{
             text-align:left;
-            margin-bottom: 60px;
             background-color: brown;
             height:100%;
         }
@@ -192,13 +190,28 @@
             const file = event.target.files[0];                                 // uploaded file
             const reader = new FileReader();                                    // file ko read/ access karta he
             reader.onload = function(e) {                                       // ek natya element banata he 
-                const imgElement = document.createElement('img');               // ek naya element banahe 
-                imgElement.src = e.target.result;                                
-                imgElement.onclick = function() { openModal(imgElement.src); }; // image par click karna pe large dikhana he model se
-                document.getElementById('gallery').appendChild(imgElement);     //gallery me image delta he            
+                const imgSrc = e.target.result;
+                let galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+                galleryImages.push(imgSrc);
+                localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+                addImageToGallery(imgSrc);
             };
-            reader.readAsDataURL(file); 
-            }
+            reader.readAsDataURL(file);     
+        }
+
+        function addImageToGallery(src) {
+            const imgElement = document.createElement('img');
+            imgElement.src = src;
+            imgElement.onclick = function() { openModal(imgElement.src); };
+            document.getElementById('gallery').appendChild(imgElement);
+        }
+
+        window.onload = function() {
+            const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+            galleryImages.forEach(image => {
+                addImageToGallery(image);
+            });
+        };
     </script>
 
 </body>
@@ -208,5 +221,3 @@
 
 
 
-<!-- now we have to make the uploaded file to be saved in the local storage  instead of just being saved in the webpage 
- and function like the initial so the uploaded image itself become the inital image when reloaded  -->
