@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;  
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            padding: 20px;
+            background-image: url(2.webp);
+            background-size: 100%;
+        }
+        header{
+            color:white;
+            text-align: center;
+            background-color: brown;
+            width: 100%;
+            position: relative;
+            padding: 10px 0;
+
+        }
+        main{ 
+            padding: 20px;
+            color : white
+        }
+
+        .container{
+            text-align:left;
+            margin-bottom: 60px;
+            background-color: brown;
+            height:100%;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            margin-right: 1200px;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);                /* in scale x & y axis are given  */
+        }
+
+        button{
+            margin :10 px;
+            padding: 20px 20px;
+            font-size: 20px;
+            margin-left: 1770px;
+            background-color: green;
+            color:white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        footer{
+            text-align: center;
+            background-color: brown;
+            color: white;
+            width: 100%;
+            position:sticky;            /* it is used when needed to move according to the roll */
+        }
+
+
+        .modal {
+            display: none;            /* it will be hidden  and will not appear  */
+            position: fixed;          
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            color: aqua;
+            align-items: center;
+            font-size: 40px;
+        }
+
+         /* below is for the model T&C  open and close*/
+
+        .model-content{
+            background-color: rgb(19, 111, 148);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 50%;
+            max-height: 50%;
+            overflow-y: scroll;
+            position:sticky;
+        }
+        .close{
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }      
+        .myModal img{
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1 >Image Gallery</h1>
+        <input type="file" id="fileInput" accept="image/*" onchange="previewFile(event)">
+    </header>
+
+    <main>
+    <div class="gallery" id="gallery">
+        <img src="html.jpg" alt="Image 1" onclick="openModal(this.src)">
+        <img src="html-dropdown.webp" alt="Image 2" onclick="openModal(this.src)">
+        <img src="html-telephone-link.webp" alt="Image 3" onclick="openModal(this.src)">
+        <img src="button-insert-html-code.png" alt="Image 4" onclick="openModal(this.src)">
+        <img src="images.png" alt="Image 5" onclick="openModal(this.src)">      
+    </div>
+
+    <div class = "container">
+        <fieldset>
+            <h1>This page is gallery view and has it's RULE'S they are --> </h1>  
+            <button type="button" onclick="openTermsAndConditions()">Terms & conditions</button>         <!--  button shows T&C on click-->
+        </fieldset>
+    </div>
+
+</main> 
+
+    <footer>
+        <div class = "container">
+            <h1> This is the online gallery page for viewing the photos.</h2>
+        </div>
+    </footer>
+    
+
+
+    <div  id="termModal" class="modal">
+        <div class = "modal-content" >
+            <span class="close" onclick="closeTermsAndConditions()">&times;</span> 
+            <h3>Rule's of the Gallery</h3>
+            <ul>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio id magni ea neque consectetur.</ul>
+            <ul>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio id magni ea neque consectetur.</ul>
+            <ul>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio id magni ea neque consectetur.</ul>
+            <ul>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio id magni ea neque consectetur.</ul>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal" onclick="closeModal()">                   <!-- this is model container  -->
+        <span class="close" onclick="closeModal()">&times;</span>             <!-- this is close when it clicked anywhere  -->
+        <img id="modalImage" src="">                                      
+    </div>
+
+
+    <script>
+        function openTermsAndConditions(){
+            document.getElementById("termModal").style.display = "flex";            // it shows T&C in mymodal
+        }
+
+        function closeTermsAndConditions() {
+            document.getElementById('termModal').style.display = "none";            // it hides T&C from the viesw
+        }
+
+        function openModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('myModal').style.display = "flex";            // it shows by flexing 
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";            // it hides from the vies
+        }
+
+        function previewFile(event) {
+            const file = event.target.files[0];                                 // uploaded file
+            const reader = new FileReader();                                    // file ko read/ access karta he
+            reader.onload = function(e) {                                       // ek natya element banata he 
+                const imgElement = document.createElement('img');               // ek naya element banahe 
+                imgElement.src = e.target.result;                                
+                imgElement.onclick = function() { openModal(imgElement.src); }; // image par click karna pe large dikhana he model se
+                document.getElementById('gallery').appendChild(imgElement);     //gallery me image delta he            
+            };
+            reader.readAsDataURL(file); 
+            }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+<!-- now we have to make the uploaded file to be saved in the local storage  instead of just being saved in the webpage 
+ and function like the initial so the uploaded image itself become the inital image when reloaded  -->
