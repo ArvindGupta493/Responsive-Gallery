@@ -25,6 +25,14 @@
             position: relative;
             padding: 10px 0;
         }
+        header h1{
+            margin: 0;
+        }
+        #fileInput{
+            position: absolute;
+            top: 18px;
+            right: 10px;
+        }
         main{ 
             padding: 20px;
             color : white
@@ -34,13 +42,15 @@
             text-align:left;
             background-color: brown;
             height:100%;
+            margin-bottom: 40px;
         }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* grid-template-columns: auto auto auto auto; */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));  /*repatation of the column size 200px wide & 1fraction  */
             gap: 10px;
-            max-width: 800px;
+            max-width: 1200px;   
             /* margin-right: 1200px; */
         }
         .gallery img {
@@ -84,6 +94,29 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
+        .delete-btn {
+            position:absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            position:absolute;
+            top: 10px;
+            left: 180px;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
 
         footer{
             text-align: center;
@@ -187,9 +220,16 @@
         <span class="close" onclick="closeModal()">&times;</span>             <!-- this is close when it clicked anywhere  -->
         <img id="modalImage" src="">    
         <div class="nav-buttons">
-            <button onclick="changeImage(-1)">&#10094; Prev</button>
-            <button onclick="changeImage(1)">Next &#10095;</button>
-        </div>                                  
+            <button onclick="changeImage(-1)"> < Prev</button>
+            <button onclick="changeImage(1)">Next  ></button>
+        </div> 
+        <div  class="delete-btn">
+            <button onclick="deleteImage()">Delete Image</button>
+        </div>
+        <div  class="download-btn">
+            <button onclick="downloadImage()">Download</button>
+        </div>
+        
     </div>
 
 
@@ -250,20 +290,54 @@
             imgElement.onclick = function() { openModal(imgElement.src); };
             document.getElementById('gallery').appendChild(imgElement);
         }
+        
+        function deleteImage() {
+            const currentImageSrc = document.getElementById('modalImage').src;  // Get the current image source displayed in modal
+            const galleryImages = Array.from(document.querySelectorAll('.gallery img'));         // gallery se sari images lena 
+            const imageToRemove = galleryImages.find(img => img.src === currentImageSrc);        // image find karna remove ke liye
+            if (imageToRemove){
+                imageToRemove.remove();               
+                
+            let savedImages = JSON.parse(localStorage.getItem('galleryImages')) || [];   // image source ko hatana local me se
+            savedImages = savedImages.filter(imgSrc => imgSrc !== currentImageSrc);      // filter karna reove ko
+            localStorage.setItem('galleryImages', JSON.stringify(savedImages));        // changes save karna
+            }
+            
+            closeModal();              // model ko close karna 
+        }
 
+        function downloadImage() {
+            const currentImageSrc = document.getElementById('modalImage').src;  // Get the current image source displayed in modal
+            var link = document.createElement("a");                             // Create a temporary link element for downloading the image
+    
+            if (link.download !== undefined) {               // Check if the browser supports the 'download' attribute
+                var url = currentImageSrc;                   // Create a temporary URL for the image file
+                link.setAttribute("href", url);              // Set the image URL as the link's href
+                link.setAttribute("download", currentImageSrc.split('/').pop());  // Use the image filename as the download name
+                link.style.visibility = 'hidden';                                 // Hide the link element
+
+                // Append the link to the body, trigger a click event to start the download, and remove the link afterward
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('Your browser does not support the download feature');
+            }
+            
+            closeModal();  // Close the modal after the download
+        }
+
+        
         window.onload = function() {
             const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
             galleryImages.forEach(image => {
                 addImageToGallery(image);
             });
-        };
+        };  
     </script>
 
 </body>
 </html>
-
-
- <!-- check why the prev and next button are not working  -->
 
 
 
