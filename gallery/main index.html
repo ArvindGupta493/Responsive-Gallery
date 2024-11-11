@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Gallery</title>
+    <link rel="stylesheet" href="main style.css">
+   
+</head>
+<body>
+    <header>
+        <img src="gallery symbol.webp" alt="logo" id="header-logo">
+        <button type="button" onclick="Home()">Home</button>
+        <button type="button" onclick="openAboutus()">About Us</button>
+        <button type="button" onclick="initialpage()">Initial page</button>
+        <button type="button" onclick="LogOut()">LogOut</button>
+        <input type="file" id="fileview" accept="image/*" onchange="previewFile(event)" />
+        <button type="button" id="submit" onclick="submitImage()">Submit</button>
+    </header>
+
+    <main>
+        <div class="gallery" id="gallery"></div>
+    </main>
+
+    <footer>
+        <fieldset class="container">
+            <button type="button" onclick="openTermsAndConditions()">Terms and Conditions</button>
+            <button type="button" onclick="openPrivacyPolicy()">Privacy Policy</button>
+            <button type="button" onclick="Contactus()">Contact us</button>
+
+            <h2>This page is for viewing and downloading the images. The following rules apply:</h2>
+        </fieldset>
+    </footer>
+
+    <div id="Contactus" class="modal" style="display:none;">
+        <span class="close" onclick="closeContactUs()">&times;</span>
+        <h2>Contact Us</h2>
+        <ul>
+            <li>Email: <a href="mailto:thegreatarvindgupta@email.com" target="_blank">email.com</a></li>
+            <li>Twitter: <a href="https://x.com/Arvindg28955000?t=HMQ8ipf-Gwum0u-APOkoSQ&s=08" target="_blank">Twitter Page</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/arvind-gupta-5658891b2" target="_blank">LinkedIn Profile</a></li>
+            <li>Instagram: <a href="https://www.instagram.com/arvindgupta1606" target="_blank">Instagram Profile</a></li>
+        </ul>
+    </div>
+
+    <div id="Aboutus" class="modal" style="display: none;">
+        <span class="close" onclick="closeAboutus()">&times;</span>
+        <h5>About Us</h5>
+        <ul>Welcome to [Gallery Name], where art meets imagination.</ul>
+        <ul>At [Gallery Name], we are passionate about showcasing exceptional works that inspire, provoke thought, and celebrate creativity.</ul>
+        <ul>We believe that art has the power to transcend boundaries—connecting people from all walks of life and fostering meaningful dialogue.</ul>
+        <ul>We invite you to explore our collection, engage with our artists, & discover the transformative power of art at Gallery.</ul>
+    </div>
+
+    <div id="T&Cmodal" class="modal">
+        <div class="gallery-Rules">
+            <span class="close" onclick="closeTermsAndConditions()">&times;</span>
+            <h3>Rules of the Gallery</h3>
+            <ul>Rule 1: Do not download images without permission.</ul>
+            <ul>Rule 2: Respect the copyrights of the images.</ul>
+        </div>
+    </div>
+
+    <div id="privacymodal" class="modal">
+        <div class="gallery-Rules">
+            <span class="close" onclick="closePrivacyPolicy()">&times;</span>
+            <h4>Privacy Policy</h4>
+            <ul>Rule 1: Do not download images without permission.</ul>
+            <ul>Rule 2: Respect the copyrights of the images.</ul>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal" onclick="closeModal(event)">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="">
+        <div class="nav-buttons">
+            <button onclick="changeImage(-1); event.stopPropagation()"> < Prev</button>
+            <button onclick="changeImage(1); event.stopPropagation()">Next ></button>
+        </div>
+        <div class="nav-button-delete">
+            <button onclick="DeleteImage(); event.stopPropagation()">Delete</button>
+        </div>
+    </div>
+
+    <script src="main script.js"></script>
+    
+</body>
+</html>
+
