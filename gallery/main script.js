@@ -1,266 +1,294 @@
- function showLogin() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('signup-form').style.display = 'none';
-        }
 
-        function showSignup() {
-            document.getElementById('signup-form').style.display = 'block';
-            document.getElementById('login-form').style.display = 'none';
-        }
-
-        function loginUser() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
-
-            if (username === storedUsername && password === storedPassword) {
-                alert('Login successful!');
-                showGallery();
-            } else {
-                alert('Invalid credentials');
-            }
-        }
-
-        function signupUser() {
-            const username = document.getElementById('signup-username').value;
-            const password = document.getElementById('signup-password').value;
-
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
-
-            alert('Signup successful! Please log in.');
-            showLogin();
-        }
-
-        function showGallery() {
-            document.getElementById('auth-page').style.display = 'none';
-            document.getElementById('gallery-header').style.display = 'block';
-            document.getElementById('gallery-main').style.display = 'block';
-        }
+//------------------------login / sigup page / logout -------------------------------//
 
 
-        function LogOut() {
-            alert('Logging out...');
-            localStorage.removeItem('username');
-            localStorage.removeItem('password');
-            document.getElementById('auth-page').style.display = 'block';
-            document.getElementById('gallery-header').style.display = 'none';
-            document.getElementById('gallery-main').style.display = 'none';
-        }
+// Function to show the login form and hide the signup form
+function showLogin() {
+    // Find the login form element by its ID and make it visible by setting display to 'block'
+    document.getElementById('login-form').style.display = 'block';  
+    // Find the signup form element by its ID and hide it by setting display to 'none'
+    document.getElementById('signup-form').style.display = 'none'; 
+}
 
-        const initialGallery = [              
-            "html.jpg", "images.png", "html-dropdown.webp",
-            "html-telephone-link.webp", "images.png", "html 2.jpg", "button-insert-html-code.png"
-        ];
+// Function to show the signup form and hide the login form
+function showSignup() {
+    document.getElementById('signup-form').style.display = 'block'; 
+    document.getElementById('login-form').style.display = 'none';    
+}
 
-        let currentImageIndex = 0;
-        let imagesInModal = [];
-        
-       
-        window.onload = function() {    // On page load, load the initial gallery images
-            loadGallery('home');        // Default to load both initial and submitted images on home
-        };
+function loginUser() {
+    // Get the value of the username input field from the login form
+    const username = document.getElementById('login-username').value; // Get the value of  username input field from the login form
+    const password = document.getElementById('login-password').value; // Get the value of  password input field from the login form
 
-        function Home() {
-            document.getElementById('gallery').classList.add('home-view');  
-            loadGallery('home');  
+    const storedUsername = localStorage.getItem('username');   // Retrieve the stored username from localStorage
+    const storedPassword = localStorage.getItem('password');   // Retrieve the stored password from localStorage
 
-            closeModal();
-            closeAboutus();
-            closeTermsAndConditions();
-            closePrivacyPolicy();
-            closeContactUs();
-        }
+    // Check if the entered username and password match the stored credentials
+    if (username === storedUsername && password === storedPassword) {
+        alert('Login successful!');                            // If they match, show a login success alert
+        showGallery();                                         // Call the function to show the gallery page after successful login
+    } else {
+        alert('Invalid credentials');              // If they don't match, show an alert with an error message
+    }
+}
 
-        function initialpage() {
-            document.getElementById('gallery').classList.remove('home-view'); 
-            loadGallery('initial');  
+// Function to handle user signup
+function signupUser() {
+    const username = document.getElementById('signup-username').value;    // Get the username value from the signup form
+    const password = document.getElementById('signup-password').value;    // Get the password value from the signup form
 
-            closeModal();
-            closeAboutus();
-            closeTermsAndConditions();
-            closePrivacyPolicy();
-            closeContactUs();
-        }
+    localStorage.setItem('username', username);                           // Store the username in localStorage
+    localStorage.setItem('password', password);                           // Store the password in localStorage
 
-        function toggleSidebar() { 
-            const sidebar = document.getElementById("sidebar");
-            sidebar.classList.toggle("active"); 
-        }
+    alert('Signup successful! Please log in.');                           // Show an alert confirming the signup process
+    showLogin();                                                          // Switch to the login form after a successful signup
+}
 
-        function applyFilter() {
-            const filters = {
-                png: document.getElementById('pngFilter').checked,
-                jpg: document.getElementById('jpgFilter').checked,
-                uploaded: document.getElementById('uploadedFilter').checked,
-                webp: document.getElementById('webpFilter').checked,
-            };
-            loadGallery('home', filters);  // Reload gallery with the applied filters
-        }
-        
-        function loadGallery(view, filters = {}) {
-            const gallery = document.getElementById("gallery");     // Get the gallery container element by its ID
-            gallery.innerHTML = "";                                 // Clear any previous gallery images from the container
+function showGallery() {                // Function to show the gallery page after successful login
+    document.getElementById('auth-page').style.display = 'none';           // Hide the authentication page (login/signup form)
+    document.getElementById('gallery-header').style.display = 'block';     // Show the gallery header section
+    document.getElementById('gallery-main').style.display = 'block';       // Show the gallery main section with the images
+}
 
-            // Combine the initial gallery images with the uploaded images if the view is 'home'
-            const galleryImages = (view === 'home') ? initialGallery.concat(getUploadedImages()) : initialGallery;
+function LogOut() {                    // Function to log out the user
+    alert('Logging out...');           // Show a logout alert to the user
 
-            // Filter the images based on the selected filters (png, jpg, uploaded, webp)
-            const filteredImages = galleryImages.filter(image => {
-                const ext = image.split('.').pop().toLowerCase();        // Get the file extension of the image (jpg, png, webp)
-                const isUploadedImage = image.startsWith("data:image/"); //Check if the image is an uploaded image (base64 format)
-
-                // Apply the filters logic. Show images if they match the selected filter.
-                return (
-                    (filters.png && ext === 'png') ||
-                    (filters.jpg && ext === 'jpg') ||
-                    (filters.webp && ext === 'webp') ||
-                    (filters.uploaded && isUploadedImage) ||
-                    (!filters.png && !filters.jpg && !filters.uploaded && !filters.webp) // Show all if no filters are applied
-                );
-            });
-
-            // If no images match the filters, show a message or handle it accordingly
-            if (filteredImages.length === 0) {
-                    gallery.innerHTML = "<p>No images match the selected filters.</p>";
-            }
-
-            // Populate the gallery with filtered images
-            filteredImages.forEach(image => {                 // Iterate over each filtered image and add it to the gallery
-                const img = document.createElement("img");    // Create a new img element for the image
-                img.src = image;                              // Set the image source to the current image
-                img.alt = image;                              // Set the alt text for the image (used for accessibility)
-                img.onclick = function() {                    // Set the click event handler to open the image in a modal
-                    openModal(image);
-                };
-                gallery.appendChild(img);                     // Append the image to the gallery
-            });
-        }
-
-
-        function getUploadedImages() {
-                return JSON.parse(localStorage.getItem('galleryImages') || '[]');  
-        }
-
-
-        function previewFile(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const newImage = e.target.result;
-                let uploadedImages = getUploadedImages();
-                localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
-                loadGallery('home'); 
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function submitImage() {
-            let fileInput = document.getElementById("fileview");
-            if (fileInput.files && fileInput.files[0]) {
-                let reader = new FileReader(); 
-                reader.onload = function(e) {         // e is event
-                    let imageSrc = e.target.result;   // assigning a image from event target
-                    let images = getUploadedImages();
-                    images.push(imageSrc);
-                    localStorage.setItem('galleryImages', JSON.stringify(images));
-                    loadGallery('home');  // Reload gallery to show the new image
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
-        }
-    
-        function openModal(image) {
-            const modal = document.getElementById("myModal");
-            const modalImage = document.getElementById("modalImage");
-            modal.style.display = "flex";
-            modalImage.src = image;
-
-            imagesInModal = initialGallery.concat(getUploadedImages());
-            currentImageIndex = imagesInModal.indexOf(image);
-        }
+    localStorage.removeItem('username');                                  // Remove the stored username from localStorage
+    localStorage.removeItem('password');                                  // Remove the stored  password from localStorage
  
-        function closeModal() {
-            document.getElementById("myModal").style.display = "none";
-        }
+    document.getElementById('auth-page').style.display = 'block';         // Show the login/signup page again after logout
+  
+    document.getElementById('gallery-header').style.display = 'none';     // Hide the gallery header sections
+    document.getElementById('gallery-main').style.display = 'none';       // Hide the gallery main sections
+}
 
-        function changeImage(direction) {
-            currentImageIndex += direction;
-            if (currentImageIndex < 0) {
-                currentImageIndex = imagesInModal.length - 1;
-            } else if (currentImageIndex >= imagesInModal.length) {
-                currentImageIndex = 0;
-            } 
-            const modalImage = document.getElementById("modalImage");
-            modalImage.src = imagesInModal[currentImageIndex];
-        }
 
-        function DeleteImage() {
-            const currentImage = imagesInModal[currentImageIndex];
-                
-            if (initialGallery.includes(currentImage)) {
-                const index = initialGallery.indexOf(currentImage);
-                if (index !== -1) {
-                    initialGallery.splice(index, 1);
-                }
-            } else {
-                let uploadedImages = getUploadedImages();
-                const index = uploadedImages.indexOf(currentImage);
-                if (index !== -1) {
-                    uploadedImages.splice(index, 1);
-                    localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
-                }
-            }
-            loadGallery('home');
-            closeModal();
-        }
 
-        function openAboutus() {
-            document.getElementById("Aboutus").style.display = "block";
-        }
+// -------------------------------- gallery page --------------------------------------------//
 
-        function closeAboutus() {
-            document.getElementById("Aboutus").style.display = "none";
-        }
 
-        function openTermsAndConditions() {
-            document.getElementById("T&Cmodal").style.display = "block";
-        }
 
-        function closeTermsAndConditions() {
-            document.getElementById("T&Cmodal").style.display = "none";
-        }
 
-        function openPrivacyPolicy() {
-            document.getElementById("privacymodal").style.display = "block";
-        }
+const initialGallery = [           // Array of initial gallery images
+    "html.jpg", "images.png", "html-dropdown.webp",
+    "html-telephone-link.webp", "images.png", "html 2.jpg", "button-insert-html-code.png"
+];
+let currentImageIndex = 0;        // Variable to track the current image index when viewing images in a modal
+let imagesInModal = [];           // Array to store all images in the modal (both initial and uploaded images)
 
-        function closePrivacyPolicy() {
-            document.getElementById("privacymodal").style.display = "none";
-        }
+window.onload = function() {      // Function to load the gallery when the page is loaded or when filters are applied
+    loadGallery('home');          // Load the gallery on page load with initial images and any uploaded images
+};
 
-        function closeContactUs() {
-            document.getElementById("Contactus").style.display = "none";
-        }
 
-        function Contactus() {
-            document.getElementById("Contactus").style.display = "block";
-        }
+function Home() {                 // home button press hone pe sare other function band ho jate he 
+    document.getElementById('gallery').classList.add('home-view');   // add the home view class in gallery element
+    loadGallery('home');          //reload the page with home as an argument in loadgallery function
 
-        // Show the gallery after login
-        function showGallery() {
-            document.getElementById('auth-page').style.display = 'none';           // Hide the login/signup form
-            document.getElementById('gallery-header').style.display = 'block';     // Show the gallery header
-            document.getElementById('gallery-main').style.display = 'block';       // Show the gallery main content
-            loadGallery('home');                           // Load the gallery with both initial and uploaded images
-        }
+    closeModal();
+    closeAboutus();
+    closeTermsAndConditions();
+    closePrivacyPolicy();
+    closeContactUs();
+}
 
-        window.onload = function() {
-            if (localStorage.getItem('username')) {
-                showGallery();
-            } else {
-                showLogin();
-            }
-        }     
+function initialpage() {        // function inital button press hone pe sare other function band ho jate he
+    document.getElementById('gallery').classList.remove('home-view');   // Removes the 'home-view' class from the gallery element
+    
+    loadGallery('initial');    // Calls the loadGallery function with initial as an argument to reload gallery in default state
+    closeModal();
+    closeAboutus();
+    closeTermsAndConditions();
+    closePrivacyPolicy();
+    closeContactUs();
+}
+
+
+function toggleSidebar() { // Function toggleSidebar is designed to toggle the visibility or state of a sidebar element on a webpage 
+    const sidebar = document.getElementById("sidebar"); //Get the DOM element with the id sidebar & store it in the variable sidebar
+    sidebar.classList.toggle("active");  // Toggle the active class on the sidebar element (adds or removes the class)
+}  
+
+
+
+function applyFilter() {  // Create an object 'filters' to hold the current states of each filter checkbox
+    const filters = {
+        png: document.getElementById('pngFilter').checked,           // Get the checked state of the 'pngFilter' checkbox
+        jpg: document.getElementById('jpgFilter').checked,           // Get the checked state of the 'jpgFilter' checkbox
+        webp: document.getElementById('webpFilter').checked,         // Get the checked state of the 'webpFilter' checkbox
+        uploaded: document.getElementById('uploadedFilter').checked, // Get the checked state of the 'uploadedFilter' checkbox
+    };
+    // Reload the gallery with the applied filters (passes 'home' as the view type and the 'filters' object)
+    loadGallery('home', filters);  
+}
+
+       
+
+function loadGallery(view, filters = {}) {                  // Function to load the gallery images based on selected view and filters
+    const gallery = document.getElementById("gallery");     // Get the gallery container element by its ID
+    gallery.innerHTML = "";                                 // Clear any previous gallery images from the container
+
+    // Combine the initial gallery images with the uploaded images if the view is 'home'
+    const galleryImages = (view === 'home') ? initialGallery.concat(getUploadedImages()) : initialGallery;
+
+    // Filter the images based on the selected filters (png, jpg, uploaded, webp)
+    const filteredImages = galleryImages.filter(image => {
+        const ext = image.split('.').pop().toLowerCase();          // Get the file extension of the image (jpg, png, webp)
+        const isUploadedImage = image.startsWith("data:image/");   // Check if the image is an uploaded image (base64 format)
+
+        return (                                                   // Return true if the image matches any of the selected filters
+            (filters.png && ext === 'png') ||
+            (filters.jpg && ext === 'jpg') ||
+            (filters.uploaded && isUploadedImage) ||
+            (filters.webp && ext === 'webp') ||
+            (!filters.png && !filters.jpg && !filters.uploaded && !filters.webp) // Show all if no filters are applied
+        );
+    });
+
+  
+    filteredImages.forEach(image => {                     // Iterate over each filtered image and add it to the gallery
+        const img = document.createElement("img");        // Create a new img element for the image
+        img.src = image;                                  // Set the image source to the current image
+        img.alt = image;                                  // Set the alt text for the image (used for accessibility)
+        img.onclick = function() {                        // Set the click event handler to open the image in a modal
+            openModal(image);
+        };
+        gallery.appendChild(img);                         // Append the image to the gallery
+    });
+}
+
+
+function getUploadedImages() {                            // get uploaded images or return empty if not existed in localStorage
+    return JSON.parse(localStorage.getItem('galleryImages') || '[]');
+}
+
+
+function previewFile(event) {                             // Function to handle the preview of an image before uploading
+    const file = event.target.files[0];                   // Get the selected file from the file input element
+    const reader = new FileReader();                      // Create a new FileReader to read the selected file
+    reader.onload = function(e) {                         // Set the onload event to process the file once it is read
+        const newImage = e.target.result;                 // Get the data URL (base64 encoded image) from the reader
+        let uploadedImages = getUploadedImages();         // Retrieve the current list of uploaded images
+        localStorage.setItem('galleryImages', JSON.stringify(uploadedImages)); //Store updated list of uploadedImages in localStorage
+        loadGallery('home');                              // Reload the gallery to show the newly uploaded image
+    };
+    reader.readAsDataURL(file);                           // Read the file as a data URL (base64 encoded string)
+}
+
+
+function submitImage() {                                  // Function to handle image submission (uploading an image to the gallery)
+    let fileInput = document.getElementById("fileview");  // Get the file input element for selecting files
+    if (fileInput.files && fileInput.files[0]) {          // Check if a file has been selected
+        let reader = new FileReader();                    // Create a new FileReader to read the selected file
+        reader.onload = function(e) {                     // Set the onload event to process the file once it is read
+            let imageSrc = e.target.result;               // Get the data URL (base64 encoded image) from the reader
+            let images = getUploadedImages();             // Retrieve the current list of uploaded images
+            images.push(imageSrc);                        // Add the new uploaded image to the list
+            localStorage.setItem('galleryImages', JSON.stringify(images)); // Store updated list of uploaded images in localStorage
+            loadGallery('home');                          // Reload the gallery to show the new image
+        };
+        reader.readAsDataURL(fileInput.files[0]);       // Read the selected file as a data URL (base64 encoded string)
+    }
+}
+
+
+function openModal(image) {                              // Function to open the modal for viewing an image
+    const modal = document.getElementById("myModal");    // Get the modal element and the image element inside the modal
+    const modalImage = document.getElementById("modalImage");
+    modal.style.display = "flex";                        // Set the modal display to 'flex' to make it visible
+    modalImage.src = image;                              // Set the modal image source to the selected image
+
+    // Combine the initial gallery images with the uploaded images for navigation
+    imagesInModal = initialGallery.concat(getUploadedImages());
+    currentImageIndex = imagesInModal.indexOf(image);    // Set the current image index to the selected image's index
+}
+
+
+function closeModal() {
+    document.getElementById("myModal").style.display = "none";      
+}
+
+
+function changeImage(direction) {      // Function to change the image (next/previous) when navigating in the modal
+    currentImageIndex += direction;    // Adjust the current image index based on the direction (1 for next, -1 for previous)
+    if (currentImageIndex < 0) {       // If the index goes out of bounds, wrap around to the beginning or end of the list
+        currentImageIndex = imagesInModal.length - 1;
+        
+    } else if (currentImageIndex >= imagesInModal.length) {
+        currentImageIndex = 0;         // if currentImageIndex is graeter then imagemodeal length then currentimage return to start
+    }
+    const modalImage = document.getElementById("modalImage");  // Get the modal image element & update its source to the new image
+    modalImage.src = imagesInModal[currentImageIndex];
+}
+
+
+function DeleteImage() {                                       // Function to delete the current image from the gallery
+    const currentImage = imagesInModal[currentImageIndex];     // Get the current image being viewed in the modal
+ 
+    // If the current image is from the initial gallery (not uploaded), remove it from the initial gallery array
+    if (initialGallery.includes(currentImage)) {               // Check if the current image exists in the initial gallery
+        const index = initialGallery.indexOf(currentImage);    // Find the index of the current image in the initial gallery
+        if (index !== -1) {                                    // If the image is found (index is not -1)
+            initialGallery.splice(index, 1);                   // Remove the image from the initial gallery array at the found index
+        }
+    } else {                                                   // If the current image is not in the initial gallery 
+        let uploadedImages = getUploadedImages();              // Retrieve the list of uploaded images using a function
+        const index = uploadedImages.indexOf(currentImage);    // Find the index of the current image in the uploaded images list
+        if (index !== -1) {                                    // If the image is found in the uploaded images list
+            uploadedImages.splice(index, 1);                   // Remove the image from the uploaded images list
+            localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));// Update localStorage with new uploaded images 
+        }
+    }
+    loadGallery('home');                                       // Reload the gallery on the 'home' page to reflect the changes 
+    closeModal();                                              // Close the modal window after the image is deleted
+}
+
+
+function openAboutus() {
+    document.getElementById("Aboutus").style.display = "block";
+}
+
+function closeAboutus() {
+    document.getElementById("Aboutus").style.display = "none";  
+}
+
+function openTermsAndConditions() {
+    document.getElementById("T&Cmodal").style.display = "block"; 
+}
+
+function closeTermsAndConditions() {
+    document.getElementById("T&Cmodal").style.display = "none"; 
+}
+
+function openPrivacyPolicy() {
+    document.getElementById("privacymodal").style.display = "block"; 
+}
+
+function closePrivacyPolicy() {
+    document.getElementById("privacymodal").style.display = "none"; 
+}
+function Contactus() {
+    document.getElementById("Contactus").style.display = "block"; 
+}
+
+function closeContactUs() {
+    document.getElementById("Contactus").style.display = "none";  
+}
+
+
+function showGallery() {                                                   // Show the gallery after login
+    document.getElementById('auth-page').style.display = 'none';           // Hide the login/signup form
+    document.getElementById('gallery-header').style.display = 'block';     // Show the gallery header
+    document.getElementById('gallery-main').style.display = 'block';       // Show the gallery main content
+    loadGallery('home');                                                   // Load the gallery with both initial and uploaded images
+}
+
+
+window.onload = function() {                      // Initialize the page on load by checking login state
+    if (localStorage.getItem('username')) {
+        showGallery();                            // If logged in, show the gallery
+    } else {
+        showLogin();                              // If not logged in, show the login form
+    }
+}
