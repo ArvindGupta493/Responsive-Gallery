@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Gallery</title>
+    <link rel="icon" type="image/x-icon" href="gallery symbol.webp">
+    
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 10px;
+            margin: 0;
+            display: flex;
+            background-color: white;
+            background-image: url("whitebackground.webp");
+            background-size: cover;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+    
+        /* Header styling */
+        header {
+            color: grey;
+            text-align: left;
+            width: 100%;
+            padding: 10px;
+            background-color: aliceblue;
+        }
+    
+        /* Main content area styling */
+        main {
+            padding: 10px;
+            color: white;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+    
+        /* Footer styling */
+        footer {
+            padding: 1px;
+            color: white;
+            text-align: left;
+            width: 100%;
+        }
+    
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            background-color: aliceblue;
+            position: sticky;
+            top: 135px;
+            bottom: 0;
+            height: calc(100vh - 135px);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            color: black;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+    
+        /* Gallery styling */
+        .gallery {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 10px;
+            width: calc(100% - 1000px);
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    
+        .gallery img {
+            width: 100%;
+            max-width: 300px;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+    
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+    
+        .gallery-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+    
+        /* Navigation buttons */
+        .nav-buttons {
+            position: absolute;
+            bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+        }
+    
+        .nav-button-delete {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            justify-content: left;
+            width: 100%;
+            padding: 0 10px;
+        }
+    
+        /* Form styling */
+        .login-signup-form {
+            background-color: rgba(255, 255, 255, 0);
+            padding: 220px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            margin-top: 100px;
+        }
+    
+        .login-signup-form input {
+            width: 100%;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+    
+        .login-signup-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+        }
+    
+        /* Modal styling */
+        .modal {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.815);
+            color: rgb(45, 167, 172);
+            font-size: 30px;
+        }
+    
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            background-color: black;
+            width: 18px;
+            height: 30px;
+        }
+    
+        /* About, T&C, Privacy, and Contact modals */
+        #Aboutus, #T&Cmodal, #privacymodal, #Contactus {
+            color: black;
+            background-color: rgba(238, 230, 230, 0.932);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 98%;
+            min-height: 80%;
+        }
+    
+        /* Logo styling */
+        #header-logo {
+            width: 120px;
+            height: 100px;
+            margin-right: 50px;
+            vertical-align: middle;
+        }
+    
+        /* File view styling */
+        #fileview {
+            position: absolute;
+            top: 60px;
+            right: 60px;
+        }
+    
+        #submit {
+            position: absolute;
+            top: 47px;
+            right: 18px;
+        }
+    
+        /* Button styling */
+        button {
+            padding: 10px 20px;
+            color: black;
+            background-color: aliceblue;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    
+        /* Container styling */
+        .container {
+            margin-bottom: 40px;
+            text-align: right;
+            background-color: aliceblue;
+            color: grey;
+        }
+
+
+
+
+
+
+
+
+/* css for preivew */
+
+
+/* Image Preview Styling */
+#previewContainer {
+    margin-top: 20px;
+    text-align: center;
+    color: #333;
+}
+
+#previewContainer h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#preview {
+    max-width: 200px;
+    display: none;
+    border: 2px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+/* Responsive Image Preview */
+@media (max-width: 768px) {
+    #preview {
+        max-width: 150px;
+    }
+    .gallery img {
+        max-width: 200px;
+    }
+}
+
+
+
+
+
+
+
+
+    
+    </style>
+    
+</head>
+<body>
+
+
+    <div id="auth-page">
+        <div id="login-form" class="login-signup-form">
+            <h2>Login</h2>
+            <input type="text" id="login-username" placeholder="Username" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button onclick="loginUser()">Login</button>
+            <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+        </div>
+
+        <div id="signup-form" class="login-signup-form" style="display: none;">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Username" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <button onclick="signupUser()">Sign Up</button>
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+
+    <header style="display: none;" id="gallery-header">
+        <img src="gallery symbol.webp" alt="logo" id="header-logo">
+        <button type="button" onclick="Home()">Home</button>
+        <button type="button" onclick="openAboutus()">About Us</button>
+        <button type="button" onclick="initialpage()">Initial page</button>
+        <button type="button" onclick="LogOut()">LogOut</button>
+        <input type="file" id="fileview" accept="image/*" onchange="previewFile(event)" />
+        <button type="button" id="submit" onclick="submitImage()">Submit</button>
+    </header>
+
+    <main style="display: none;" id="gallery-main">
+        <div class="gallery-container">
+            <div class="sidebar">
+                <h3>Filter by Type</h3>
+                <label><input type="checkbox" id="pngFilter" onchange="applyFilter()"> PNG</label><br>    <!--can use type = radio  -->
+                <label><input type="checkbox" id="jpgFilter" onchange="applyFilter()"> JPG</label><br>
+                <label><input type="checkbox" id="webpFilter" onchange="applyFilter()"> WEBP</label><br>
+                <label><input type="checkbox" id="uploadedFilter" onchange="applyFilter()"> uploaded</label><br>
+
+
+
+
+ <!-- Image Preview Area -->
+                    <div id="previewContainer" style="margin-top: 20px;">
+                        <h4>Image Preview</h4>
+                        <img id="preview" src="" alt="Preview" style="max-width: 200px; display: none;" />
+                    </div>
+            </div>
+ 
+            <div class="gallery" id="gallery"></div>
+        </div>
+    </main>
+    <footer >
+        <fieldset class="container">
+            <button id="myBtn">Try it</button>
+
+            <button type="button" onclick="openTermsAndConditions()">Terms and Conditions</button>
+            <button type="button" onclick="openPrivacyPolicy()">Privacy Policy</button>
+            <button type="button" onclick="Contactus()">Contact us</button>
+        </fieldset>
+    </footer>
+
+
+    <div id="Contactus" class="modal" style="display:none;">
+        <span class="close" onclick="closeContactUs()">&times;</span>
+        <h2>Contact Us</h2>
+        <ul>
+            <li>Email: <a href="mailto:thegreatarvindgupta@email.com" target="_blank">email.com</a></li>
+            <li>Twitter: <a href="https://x.com/Arvindg28955000?t=HMQ8ipf-Gwum0u-APOkoSQ&s=08" target="_blank">Twitter Page</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/arvind-gupta-5658891b2" target="_blank">LinkedIn Profile</a></li>
+            <li>Instagram: <a href="https://www.instagram.com/arvindgupta1606" target="_blank">Instagram Profile</a></li>
+        </ul>
+    </div>
+
+    <div id="Aboutus" class="modal" style="display: none;">
+        <span class="close" onclick="closeAboutus()">&times;</span>
+        <h5>About Us</h5>
+        <ul>Welcome to [Gallery Name], where art meets imagination.</ul>
+
+        <ul>At [Gallery Name], we are passionate about showcasing exceptional works that inspire, provoke thought, and celebrate creativity. Nestled in the heart of [City/Location], our gallery is dedicated to presenting a dynamic collection of contemporary and traditional art, with a focus on both emerging and established artists from around the world.</ul> 
+            
+        <ul>We believe that art has the power to transcend boundaries—connecting people from all walks of life and fostering meaningful dialogue. Our curated exhibitions span a wide range of mediums, from painting and sculpture to photography, mixed media, and digital art. Whether you're a seasoned collector or a first-time visitor, we strive to provide an inclusive and welcoming space for art lovers of all kinds.</ul>    
+            
+        <ul>In addition to our rotating exhibitions, we offer a variety of art events, artist talks, workshops, and private viewings. Our goal is to nurture creativity, build community, and offer a platform for artists to share their unique visions with the world.</ul>    
+            
+        <ul>We invite you to explore our collection, engage with our artists, & discover the transformative power of art at Gallery</ul>
+    </div>
+
+    <div id="T&Cmodal" class="modal">
+        <div class="gallery-Rules">
+            <span class="close" onclick="closeTermsAndConditions()">&times;</span>
+            <h3>Rules of the Gallery</h3>
+            <ul>Rule 1: Do not download images without permission.</ul>
+            <ul>Rule 2: Respect the copyrights of the images.</ul>
+        </div>
+    </div>
+
+    <div id="privacymodal" class="modal">
+        <div class="gallery-Rules">
+            <span class="close" onclick="closePrivacyPolicy()">&times;</span>
+            <h4>Privacy Policy</h4>
+            <ul>Rule 1: Do not download images without permission.</ul>
+            <ul>Rule 2: Respect the copyrights of the images.</ul>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal" onclick="closeModal(event)">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="">
+        <div class="nav-buttons">
+            <button onclick="changeImage(-1); event.stopPropagation()"> < Prev</button>
+            <button onclick="changeImage(1); event.stopPropagation()">Next ></button>
+        </div>
+        <div class="nav-button-delete">
+            <button onclick="DeleteImage(); event.stopPropagation()">Delete</button>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById("myBtn").addEventListener("click", myFunction);
+        function myFunction() {
+            alert ("THIS S**T ONLY WORKS WITH LOCALSTORAGE AND IS NOT CONNECTED TO THE CLOUD ");
+        }
+
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('signup-form').style.display = 'block';
+            document.getElementById('login-form').style.display = 'none';
+        }
+
+        function loginUser() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            if (username === storedUsername && password === storedPassword) {
+                alert('Login successful!');
+                showGallery(); 
+            } else {
+                alert('Invalid credentials');
+            }                                                                                                                                                                                                                                                                                       
+        }
+
+        function signupUser() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+
+            alert('Signup successful! Please log in.');
+            showLogin();
+        }
+
+        function showGallery() {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('gallery-header').style.display = 'block';
+            document.getElementById('gallery-main').style.display = 'block';
+        }
+
+
+        function LogOut() {
+            alert('Logging out...');
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            document.getElementById('auth-page').style.display = 'block';
+            document.getElementById('gallery-header').style.display = 'none';
+            document.getElementById('gallery-main').style.display = 'none';
+        }
+
+        const initialGallery = [              
+            "html.jpg", "images.png", "html-dropdown.webp",
+            "html-telephone-link.webp", "images.png", "html 2.jpg", "button-insert-html-code.png"
+        ];
+
+        let currentImageIndex = 0;
+        let imagesInModal = [];
+        
+       
+        window.onload = function() {    // On page load, load the initial gallery images
+            loadGallery('home');        // Default to load both initial and submitted images on home
+        };
+
+        function Home() {
+            document.getElementById('gallery').classList.add('home-view');  
+            loadGallery('home');  
+
+            closeModal();
+            closeAboutus();
+            closeTermsAndConditions();
+            closePrivacyPolicy();
+            closeContactUs();
+        }
+
+        function initialpage() {
+            document.getElementById('gallery').classList.remove('home-view'); 
+            loadGallery('initial');  
+
+            closeModal();
+            closeAboutus();
+            closeTermsAndConditions();
+            closePrivacyPolicy();
+            closeContactUs();
+        }
+
+        function toggleSidebar() {                                   // function of the sidebar
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");                     // side will remain open using toggle 
+        }
+
+        function applyFilter() {
+            const filters = {
+                png: document.getElementById('pngFilter').checked,
+                jpg: document.getElementById('jpgFilter').checked,
+                uploaded: document.getElementById('uploadedFilter').checked,
+                webp: document.getElementById('webpFilter').checked,
+            };
+            loadGallery('home', filters);                                // Reload gallery with the applied filters
+        }
+        
+        function loadGallery(view, filters = {}) {                       // fucntion for load gallery
+            const gallery = document.getElementById("gallery");          // Get the gallery container element by its ID
+            gallery.innerHTML = "";                                      // Clear any previous gallery images from the container
+
+            // Combine the initial gallery images with the uploaded images if the view is 'home'
+            const galleryImages = (view === 'home') ? initialGallery.concat(getUploadedImages()) : initialGallery;
+
+            const filteredImages = galleryImages.filter(image => {       // Filter the images based on the selected filters 
+                const ext = image.split('.').pop().toLowerCase();        // Get the file extension of the image (jpg, png, webp)
+                const isUploadedImage = image.startsWith("data:image/"); //Check if the image is an uploaded image (base64 format)
+
+                return (                                      // Apply the filters logic. Show images if they match the selected filter.
+                    (filters.png && ext === 'png') ||
+                    (filters.jpg && ext === 'jpg') ||          // ext is file extenntion of the image 
+                    (filters.webp && ext === 'webp') ||
+                    (filters.uploaded && isUploadedImage) ||
+                    (!filters.png && !filters.jpg && !filters.uploaded && !filters.webp) // Show all if no filters are applied
+                );
+            });
+
+            if (filteredImages.length === 0) {        // agar koi image filter se match nahi karti to yaha messege dikahana he 
+                gallery.innerHTML = "<p>No images match the selected filters.</p>";
+            }
+
+            filteredImages.forEach(image => {                            // Iterate over each filtered image and add it to the gallery
+                const img = document.createElement("img");               // Create a new img element for the image
+                img.src = image;                                         // Set the image source to the current image
+                img.alt = image;                                         // Set the alt text for the image (used for accessibility)
+                img.onclick = function() {                               // Set the click event handler to open the image in a modal
+                    openModal(image);
+                };
+                gallery.appendChild(img);                                // Append the image to the gallery
+            });
+        }
+
+
+        function getUploadedImages() {          // images lana localstorage se agar nahi he to empty retutn ana or dikama gallery me  
+                return JSON.parse(localStorage.getItem('galleryImages') || '[]');  
+        }
+
+        function previewFile(event) {
+            const file = event.target.files[0];                          // Get the selected file
+            const reader = new FileReader();                             // Create a FileReader to read the file
+
+            reader.onload = function(e) {                         
+                const previewImage = document.getElementById("preview"); // Get the preview image element
+                previewImage.src = e.target.result;                      // Set the source of the preview image to the result of the file
+                previewImage.style.display = "block";                    // Make the preview visible
+            };
+
+            reader.readAsDataURL(file);                                  // Read the file as a base64 data URL
+        }
+
+        function submitImage() {                                         // submitimages ka function he 
+            let fileInput = document.getElementById("fileview");         // fileinput liye gaha he fileview jo select hongi 
+            const previewImage = document.getElementById("preview");     // preview liya gaya he preview images ke liye 
+                         
+             if (fileInput.files && fileInput.files[0]) {                // file input he && file input selected he  
+                let reader = new FileReader();                           // filereader object for reader
+                reader.onload = function(e) {                            // jab file load ho tab is function ka event trigger hoga
+                    let imageSrc = e.target.result;                      // selected resulted image from event target se li jati he 
+                    let images = getUploadedImages();                    // uploadedimages ko liye jata he 
+                    images.push(imageSrc);                               // new image  push karte he uploaded image me 
+                    localStorage.setItem('galleryImages', JSON.stringify(images));  //updated list ko store karte he localstrage me 
+                    loadGallery('home');                                 // gallery ko reload karte he 
+                    previewImage.style.display = "none";                 // submit ke baad image hide karte he
+                };
+                reader.readAsDataURL(fileInput.files[0]);                // reader selected file ko data url me he
+            }
+        }
+
+        function openModal(image) {                                      // function heopenmodel ka image parameter he 
+            const modal = document.getElementById("myModal");            // mymodel ko liye he model me se
+            const modalImage = document.getElementById("modalImage");    // yaha modalimages le jati he 
+            modal.style.display = "flex";                                // flex style matalb dikanah 
+            modalImage.src = image;                                      // yaha modal images source se image select ki jati he 
+
+            imagesInModal = initialGallery.concat(getUploadedImages());  // uploadedimages ko jood dete he initalgallery se
+            currentImageIndex = imagesInModal.indexOf(image);            // currentimageindex yaha selected image he 
+        }
+
+        // function openModal(image) {
+        //     const modal = document.getElementById("myModal");
+        //     const modalImage = document.getElementById("modalImage");
+
+        //     // Get the filtered images when the modal is opened
+        //     const filteredImages = loadGallery('home', filters); // Ensure the `filters` variable is globally accessible
+        //     imagesInModal = filteredImages;
+        //     currentImageIndex = imagesInModal.indexOf(image);
+
+        //     modal.style.display = "flex";
+        //     modalImage.src = image;
+        // }
+
+ 
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        function changeImage(direction) {                                // function of hcnage image direction
+            currentImageIndex += direction;                              // cirection + ya - me hoti currentimage ki
+            if (currentImageIndex < 0) {                                 // agar currentimageindex out of bound hota he  
+                currentImageIndex = imagesInModal.length - 1;            // to use repeat kana he ya end se
+            } else if (currentImageIndex >= imagesInModal.length) {      // agar imageindex jada hoto jati he model length se 
+                currentImageIndex = 0;                                   // to start se repeat hoti he
+            } 
+            const modalImage = document.getElementById("modalImage");    // mymodel ko liye he model me se
+            modalImage.src = imagesInModal[currentImageIndex];           // update lkarna he currentimages ko source se
+        }
+
+        function DeleteImage() {                                         // delete kane ka function
+            const currentImage = imagesInModal[currentImageIndex];       // current image he  jo model me he 
+                
+            if (initialGallery.includes(currentImage)) {                 // inital gallery me me current image he to
+                const index = initialGallery.indexOf(currentImage);      // check ki current image he index me iniallgallery ke  
+                if (index !== -1) {                                      // agar image index me he kya
+                    initialGallery.splice(index, 1);                     // remove hoti inital gallery me se splice se single
+                }
+            } else {                                                     // nahi to
+                let uploadedImages = getUploadedImages();                // uploadeded inmages me lye jata he
+                const index = uploadedImages.indexOf(currentImage);      // uploadedimages me current image deki jati he
+                if (index !== -1) {                                      // agar image index me he kya
+                    uploadedImages.splice(index, 1);                     // remove hoti inital gallery me se splice se single
+                    localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));// localstorage ko update karte he 
+                }
+            }
+            loadGallery('home');                                         // home page ko load karte he
+            closeModal();                                                // modal band karte he 
+        }
+
+        function openAboutus() {
+            document.getElementById("Aboutus").style.display = "block";
+        }
+
+        function closeAboutus() {
+            document.getElementById("Aboutus").style.display = "none";
+        }
+
+        function openTermsAndConditions() {
+            document.getElementById("T&Cmodal").style.display = "block";
+        }
+
+        function closeTermsAndConditions() {
+            document.getElementById("T&Cmodal").style.display = "none";
+        }
+
+        function openPrivacyPolicy() {
+            document.getElementById("privacymodal").style.display = "block";
+        }
+
+        function closePrivacyPolicy() {
+            document.getElementById("privacymodal").style.display = "none";
+        }
+
+        function closeContactUs() {
+            document.getElementById("Contactus").style.display = "none";
+        }
+
+        function Contactus() {
+            document.getElementById("Contactus").style.display = "block";
+        }
+
+        // Show the gallery after login
+        function showGallery() {
+            document.getElementById('auth-page').style.display = 'none';           // Hide the login/signup form
+            document.getElementById('gallery-header').style.display = 'block';     // Show the gallery header
+            document.getElementById('gallery-main').style.display = 'block';       // Show the gallery main content
+            loadGallery('home');                           // Load the gallery with both initial and uploaded images
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('username')) {
+                showGallery();
+            } else {
+                showLogin();
+            } 
+        }     
+
+    </script>
+</body>
+</html>
